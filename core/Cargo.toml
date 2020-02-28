@@ -6,6 +6,8 @@ edition = "2018"
 
 [dependencies]
 bitstream-io = "0.8.2"
+downcast-rs = "1.1.1"
+enumset = "0.4.2"
 fnv = "1.0.3"
 gc-arena = "0.2.0"
 gc-arena-derive = "0.2.0"
@@ -13,14 +15,12 @@ generational-arena = "0.2.7"
 libflate = "0.1.26"
 log = "0.4"
 minimp3 = { version = "0.3.3", optional = true }
-puremp3 = { version = "0.1", optional = true }
-ruffle_macros = { path = "macros" }
-swf = { path = "../swf" }
-enumset = "0.4.2"
-smallvec = "1.2.0"
 num_enum = "0.4.2"
+puremp3 = { version = "0.1", optional = true }
 quick-xml = "0.17.2"
-downcast-rs = "1.1.1"
+ruffle_macros = { path = "macros" }
+smallvec = "1.2.0"
+swf = { path = "../swf" }
 url = "2.1.0"
 weak-table = "0.2.3"
 

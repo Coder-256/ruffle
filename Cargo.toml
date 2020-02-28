@@ -3,9 +3,9 @@ members = [
     "core",
     "core/macros",
     "desktop",
+    "scanner",
     "swf",
     "web",
-    "scanner",
 ]
 
 # Don't optimize build scripts and macros.
