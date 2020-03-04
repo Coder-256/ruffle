@@ -74,41 +74,18 @@ pub fn make_decoder<'a, R: 'a + Send + Read>(
 /// TODO: Add `current_frame`.
 pub trait StreamDecoder: Decoder {}
 
-/// The `StandardStreamDecoder` takes care of reading the audio data from `SoundStreamBlock` tags
-/// and feeds it to the decoder.
-struct StandardStreamDecoder {
-    /// The underlying decoder. The decoder will get its data from a `StreamTagReader`.
-    decoder: Box<dyn Decoder + Send>,
-}
-
-impl StandardStreamDecoder {
-    /// Constructs a new `StandardStreamDecoder.
-    /// `swf_data` should be the tag data of the MovieClip that contains the stream.
-    fn new(format: &SoundFormat, swf_data: SwfSlice, swf_version: u8) -> Self {
-        // Create a tag reader to get the audio data from SoundStreamBlock tags.
-        let tag_reader = StreamTagReader::new(format.compression, swf_data, swf_version);
-        // Wrap the tag reader in the decoder.
-        let decoder = make_decoder(format, tag_reader);
-        Self { decoder }
-    }
-}
-
-impl Decoder for StandardStreamDecoder {
-    fn num_channels(&self) -> u8 {
-        self.decoder.num_channels()
-    }
-    fn sample_rate(&self) -> u16 {
-        self.decoder.sample_rate()
-    }
-}
-
-impl Iterator for StandardStreamDecoder {
-    type Item = [i16; 2];
-
-    #[inline]
-    fn next(&mut self) -> Option<Self::Item> {
-        self.decoder.next()
-    }
+/// Constructs a new standard stream decoder. This will read audio data from `SoundStreamBlock` tags
+/// and feed it to the decoder. `swf_data` should be the tag data of the MovieClip that contains the
+/// stream.
+fn standard_stream_decoder(
+    format: &SoundFormat,
+    swf_data: SwfSlice,
+    swf_version: u8,
+) -> Box<dyn Send + Decoder> {
+    // Create a tag reader to get the audio data from SoundStreamBlock tags.
+    let tag_reader = StreamTagReader::new(format.compression, swf_data, swf_version);
+    // Wrap the tag reader in the decoder.
+    make_decoder(format, tag_reader)
 }
 
 /// Stream sounds encoded with ADPCM have an ADPCM header in each `SoundStreamBlock` tag, unlike
@@ -176,7 +153,7 @@ impl Iterator for AdpcmStreamDecoder {
 }
 
 /// Makes a `StreamDecoder` for the given stream. `swf_data` should be the MovieClip's tag data.
-/// Generally this will return a `StandardStreamDecoder`, except for ADPCM streams.
+/// Generally this will return a `standard_stream_decoder`, except for ADPCM streams.
 pub fn make_stream_decoder(
     format: &swf::SoundFormat,
     swf_data: SwfSlice,
@@ -185,7 +162,7 @@ pub fn make_stream_decoder(
     if format.compression == AudioCompression::Adpcm {
         Box::new(AdpcmStreamDecoder::new(format, swf_data, swf_version))
     } else {
-        Box::new(StandardStreamDecoder::new(format, swf_data, swf_version))
+        standard_stream_decoder(format, swf_data, swf_version)
     }
 }
 
