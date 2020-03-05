@@ -1,10 +1,10 @@
-use super::{Decoder, SeekableDecoder};
+use super::{Frame, SeekableDecoder};
 use bitstream_io::{BigEndian, BitReader};
 use std::io::{Cursor, Read};
 
 pub struct AdpcmDecoder<R: Read> {
     inner: BitReader<R, BigEndian>,
-    sample_rate: u16,
+    sample_rate: u32,
     is_stereo: bool,
     bits_per_sample: usize,
     sample_num: u16,
@@ -33,7 +33,7 @@ impl<R: Read> AdpcmDecoder<R> {
         29794, 32767,
     ];
 
-    pub fn new(inner: R, is_stereo: bool, sample_rate: u16) -> Self {
+    pub fn new(inner: R, is_stereo: bool, sample_rate: u32) -> Self {
         let mut reader = BitReader::new(inner);
         let bits_per_sample = reader.read::<u8>(2).unwrap_or_else(|e| {
             log::warn!("Invalid ADPCM stream: {}", e);
@@ -139,28 +139,21 @@ impl<R: Read> AdpcmDecoder<R> {
 }
 
 impl<R: Read> Iterator for AdpcmDecoder<R> {
-    type Item = [i16; 2];
+    type Item = Frame;
+
     fn next(&mut self) -> Option<Self::Item> {
         self.next_sample().ok()?;
-        if self.is_stereo {
-            Some([self.left_sample as i16, self.right_sample as i16])
+        let samples: Box<[i16]> = if self.is_stereo {
+            Box::new([self.left_sample as i16, self.right_sample as i16])
         } else {
-            Some([self.left_sample as i16, self.left_sample as i16])
-        }
-    }
-}
+            Box::new([self.left_sample as i16])
+        };
 
-impl<R: std::io::Read> Decoder for AdpcmDecoder<R> {
-    fn num_channels(&self) -> u8 {
-        if self.is_stereo {
-            2
-        } else {
-            1
-        }
-    }
-
-    fn sample_rate(&self) -> u16 {
-        self.sample_rate
+        Some(Frame {
+            num_channels: if self.is_stereo { 2 } else { 1 },
+            sample_rate: self.sample_rate,
+            samples,
+        })
     }
 }
 
@@ -172,6 +165,6 @@ impl<R: AsRef<[u8]> + Default> SeekableDecoder for AdpcmDecoder<Cursor<R>> {
         let bit_stream = std::mem::replace(&mut self.inner, BitReader::new(Default::default()));
         let mut cursor = bit_stream.into_reader();
         cursor.set_position(0);
-        *self = AdpcmDecoder::new(cursor, self.is_stereo, self.sample_rate());
+        *self = AdpcmDecoder::new(cursor, self.is_stereo, self.sample_rate);
     }
 }

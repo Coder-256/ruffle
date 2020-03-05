@@ -12,21 +12,26 @@ use crate::tag_utils::SwfSlice;
 use std::io::{Cursor, Read};
 use swf::{AudioCompression, SoundFormat, TagCode};
 
-/// An audio decoder. Can be used as an `Iterator` to return stero sample frames.
-/// If the sound is mono, the sample is duplicated across both channels.
-pub trait Decoder: Iterator<Item = [i16; 2]> {
-    /// The number of channels of this audio decoder. Always 1 or 2.
-    fn num_channels(&self) -> u8;
-
-    /// The sample rate of this audio decoder.
-    fn sample_rate(&self) -> u16;
+/// An audio frame. If the source is mono, each sample is duplicated across both channels.
+pub struct Frame {
+    /// The number of channels of this frame. Always 1 or 2.
+    pub num_channels: u8,
+    /// The sample rate of this frame.
+    pub sample_rate: u32,
+    /// The samples in this frame. Multi-channel frames are interleaved.
+    pub samples: Box<[i16]>,
 }
 
+/// An audio decoder. Can be used as an `Iterator` to return stero sample frames.
+pub trait Decoder: Iterator<Item = Frame> {}
+
+impl<T: Iterator<Item = Frame>> Decoder for T {}
+
 /// Instantiate a decoder for the compression that the sound data uses.
-pub fn make_decoder<'a, R: 'a + Send + Read>(
+pub fn make_decoder<'a, R: 'a + Read + Send>(
     format: &SoundFormat,
     data: R,
-) -> Box<dyn 'a + Send + Decoder> {
+) -> Box<dyn 'a + Decoder + Send> {
     match format.compression {
         AudioCompression::UncompressedUnknownEndian => {
             // Cross fingers that it's little endian.
@@ -49,11 +54,7 @@ pub fn make_decoder<'a, R: 'a + Send + Read>(
             format.is_stereo,
             format.sample_rate,
         )),
-        AudioCompression::Mp3 => Box::new(Mp3Decoder::new(
-            if format.is_stereo { 2 } else { 1 },
-            format.sample_rate.into(),
-            data,
-        )),
+        AudioCompression::Mp3 => Box::new(Mp3Decoder::new(data)),
         _ => {
             log::error!(
                 "make_decoder: Unhandled audio compression {:?}",
@@ -81,7 +82,7 @@ fn standard_stream_decoder(
     format: &SoundFormat,
     swf_data: SwfSlice,
     swf_version: u8,
-) -> Box<dyn Send + Decoder> {
+) -> Box<dyn Decoder + Send> {
     // Create a tag reader to get the audio data from SoundStreamBlock tags.
     let tag_reader = StreamTagReader::new(format.compression, swf_data, swf_version);
     // Wrap the tag reader in the decoder.
@@ -117,17 +118,8 @@ impl AdpcmStreamDecoder {
     }
 }
 
-impl Decoder for AdpcmStreamDecoder {
-    fn num_channels(&self) -> u8 {
-        self.decoder.num_channels()
-    }
-    fn sample_rate(&self) -> u16 {
-        self.decoder.sample_rate()
-    }
-}
-
 impl Iterator for AdpcmStreamDecoder {
-    type Item = [i16; 2];
+    type Item = Frame;
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(sample_frame) = self.decoder.next() {
@@ -171,12 +163,12 @@ pub trait SeekableDecoder: Decoder {
     fn reset(&mut self);
 
     /// Seeks to a specific sample frame.
-    fn seek_to_sample_frame(&mut self, frame: u32) {
+    fn seek_to_sample_frame(&mut self, index: u32) {
         // The default implementation simply resets the stream and steps through
         // until the desired position.
         // This will be slow for long sounds on heavy decoders.
         self.reset();
-        for _ in 0..frame {
+        for _ in 0..index {
             self.next();
         }
     }

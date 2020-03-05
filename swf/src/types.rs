@@ -778,7 +778,7 @@ pub enum AudioCompression {
 #[derive(Debug, PartialEq, Clone)]
 pub struct SoundFormat {
     pub compression: AudioCompression,
-    pub sample_rate: u16,
+    pub sample_rate: u32,
     pub is_stereo: bool,
     pub is_16_bit: bool,
 }
