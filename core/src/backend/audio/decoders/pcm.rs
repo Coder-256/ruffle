@@ -1,5 +1,8 @@
 use super::{Decoder, SeekableDecoder};
-use std::io::{Cursor, Read};
+use std::{
+    convert::TryInto as _,
+    io::{Cursor, Read},
+};
 
 /// Decoder for PCM audio data in a Flash file.
 /// Flash exports this when you use the "Raw" compression setting.
@@ -27,18 +30,17 @@ impl<R: Read> Iterator for PcmDecoder<R> {
     fn next(&mut self) -> Option<Self::Item> {
         if self.is_stereo {
             if self.is_16_bit {
-                let mut left = [0u8; 2];
-                let mut right = [0u8; 2];
-                self.inner.read_exact(&mut left).ok()?;
-                self.inner.read_exact(&mut right).ok()?;
-                let left = i16::from_le_bytes(left);
-                let right = i16::from_le_bytes(right);
+                let mut bytes = [0u8; 4];
+                self.inner.read_exact(&mut bytes).ok()?;
+                let left = i16::from_le_bytes(bytes[0..2].try_into().unwrap());
+                let right = i16::from_le_bytes(bytes[2..4].try_into().unwrap());
                 Some([left, right])
             } else {
-                let mut bytes = [0u8];
+                let mut bytes = [0u8; 2];
                 self.inner.read_exact(&mut bytes).ok()?;
-                let sample = (i16::from(bytes[0]) - 127) * 128;
-                Some([sample, sample])
+                let left = (i16::from(bytes[0]) - 127) * 128;
+                let right = (i16::from(bytes[1]) - 127) * 128;
+                Some([left, right])
             }
         } else if self.is_16_bit {
             let mut bytes = [0u8; 2];
@@ -46,11 +48,10 @@ impl<R: Read> Iterator for PcmDecoder<R> {
             let sample = i16::from_le_bytes(bytes);
             Some([sample, sample])
         } else {
-            let mut bytes = [0u8; 2];
+            let mut bytes = [0u8];
             self.inner.read_exact(&mut bytes).ok()?;
-            let left = (i16::from(bytes[0]) - 127) * 128;
-            let right = (i16::from(bytes[1]) - 127) * 128;
-            Some([left, right])
+            let sample = (i16::from(bytes[0]) - 127) * 128;
+            Some([sample, sample])
         }
     }
 }
