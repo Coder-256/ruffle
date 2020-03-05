@@ -127,7 +127,6 @@ pub struct SystemPrototypes<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for SystemPrototypes<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.object.trace(cc);
         self.function.trace(cc);

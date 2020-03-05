@@ -21,14 +21,12 @@ pub trait JsResult<T> {
 }
 
 impl<T> JsResult<T> for Result<T, JsValue> {
-    #[inline]
     fn warn_on_error(&self) {
         if let Err(value) = self {
             log::warn!("Unexpected JavaScript error: {:?}", value);
         }
     }
 
-    #[inline]
     fn into_js_result(self) -> Result<T, JsError> {
         self.map_err(|value| JsError { value })
     }

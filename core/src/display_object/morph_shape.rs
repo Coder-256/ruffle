@@ -71,7 +71,6 @@ impl<'gc> TDisplayObject<'gc> for MorphShape<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for MorphShapeData<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.base.trace(cc);
         self.static_data.trace(cc);
@@ -429,7 +428,6 @@ impl MorphShapeStatic {
 }
 
 unsafe impl<'gc> gc_arena::Collect for MorphShapeStatic {
-    #[inline]
     fn needs_trace() -> bool {
         false
     }

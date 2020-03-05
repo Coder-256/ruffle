@@ -113,7 +113,6 @@ impl<'gc> TDisplayObject<'gc> for Text<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for TextData<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.base.trace(cc);
         self.static_data.trace(cc);
@@ -131,7 +130,6 @@ struct TextStatic {
 }
 
 unsafe impl<'gc> gc_arena::Collect for TextStatic {
-    #[inline]
     fn needs_trace() -> bool {
         false
     }

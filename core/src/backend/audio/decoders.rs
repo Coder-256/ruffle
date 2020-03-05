@@ -129,7 +129,6 @@ impl Decoder for AdpcmStreamDecoder {
 impl Iterator for AdpcmStreamDecoder {
     type Item = [i16; 2];
 
-    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(sample_frame) = self.decoder.next() {
             // Return sample frames until the decoder has exhausted

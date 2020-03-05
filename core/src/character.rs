@@ -16,7 +16,6 @@ pub enum Character<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for Character<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         match self {
             Character::EditText(c) => c.trace(cc),

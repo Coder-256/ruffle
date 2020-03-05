@@ -117,7 +117,6 @@ struct BitmapStatic {
 }
 
 unsafe impl<'gc> gc_arena::Collect for BitmapStatic {
-    #[inline]
     fn needs_trace() -> bool {
         true
     }

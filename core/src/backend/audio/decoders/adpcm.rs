@@ -151,7 +151,6 @@ impl<R: Read> Iterator for AdpcmDecoder<R> {
 }
 
 impl<R: std::io::Read> Decoder for AdpcmDecoder<R> {
-    #[inline]
     fn num_channels(&self) -> u8 {
         if self.is_stereo {
             2
@@ -160,14 +159,12 @@ impl<R: std::io::Read> Decoder for AdpcmDecoder<R> {
         }
     }
 
-    #[inline]
     fn sample_rate(&self) -> u16 {
         self.sample_rate
     }
 }
 
 impl<R: AsRef<[u8]> + Default> SeekableDecoder for AdpcmDecoder<Cursor<R>> {
-    #[inline]
     fn reset(&mut self) {
         // TODO: This is funky.
         // I want to reset the `BitStream` and `Cursor` to their initial positions,

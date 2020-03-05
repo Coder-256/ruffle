@@ -1277,7 +1277,6 @@ fn swf_bitmap_to_gl_matrix(m: swf::Matrix, bitmap_width: u32, bitmap_height: u32
 }
 
 /// Returns the drawing parameters for masking.
-#[inline]
 fn mask_draw_parameters(
     params: &mut DrawParameters,
     num_masks: u32,
@@ -1325,13 +1324,11 @@ fn mask_draw_parameters(
 }
 
 /// Returns the drawing parameters for standard color/gradient fills.
-#[inline]
 fn color_blend() -> glium::Blend {
     glium::Blend::alpha_blending()
 }
 
 /// Returns the drawing parameters for bitmaps with pre-multipled alpha.
-#[inline]
 fn bitmap_blend() -> glium::Blend {
     use glium::{BlendingFunction, LinearBlendingFactor};
     glium::Blend {

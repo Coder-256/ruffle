@@ -414,7 +414,6 @@ impl<'gc> TDisplayObject<'gc> for MovieClip<'gc> {
 }
 
 unsafe impl<'gc> Collect for MovieClipData<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         for child in self.children.values() {
             child.trace(cc);
@@ -845,7 +844,6 @@ impl<'gc> MovieClipData<'gc> {
     }
 
     /// Handles a PlaceObject tag when running a goto action.
-    #[inline]
     fn goto_place_object<'a>(
         &mut self,
         reader: &mut SwfStream<&'a [u8]>,
@@ -875,7 +873,6 @@ impl<'gc> MovieClipData<'gc> {
     }
 
     /// Handle a RemoveObject tag when running a goto action.
-    #[inline]
     fn goto_remove_object<'a>(
         &mut self,
         reader: &mut SwfStream<&'a [u8]>,
@@ -1115,7 +1112,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         }
     }
 
-    #[inline]
     fn define_bits_lossless(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1138,7 +1134,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_morph_shape(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1153,7 +1148,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_shape(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1169,7 +1163,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn preload_place_object(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1219,7 +1212,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn preload_sound_stream_block(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1240,7 +1232,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn preload_sound_stream_head(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1257,7 +1248,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_bits(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1294,7 +1284,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_bits_jpeg_2(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1324,7 +1313,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_bits_jpeg_3(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1362,7 +1350,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_bits_jpeg_4(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1401,7 +1388,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_button_1(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1421,7 +1407,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_button_2(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1441,7 +1426,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_button_cxform(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1471,7 +1455,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_button_sound(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1501,7 +1484,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
     }
 
     /// Defines a dynamic text field character.
-    #[inline]
     fn define_edit_text(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1516,7 +1498,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_font_1(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1555,7 +1536,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_font_2(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1570,7 +1550,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_font_3(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1586,7 +1565,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_sound(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1642,7 +1620,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn define_text(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1658,7 +1635,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn export_assets(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1674,7 +1650,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn frame_label(
         &mut self,
         _context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1696,7 +1671,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn jpeg_tables(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1717,7 +1691,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn preload_remove_object(
         &mut self,
         _context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1734,7 +1707,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn preload_show_frame(
         &mut self,
         _context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1748,7 +1720,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
 
 // Control tags
 impl<'gc, 'a> MovieClipData<'gc> {
-    #[inline]
     fn do_action(
         &mut self,
         self_display_object: DisplayObject<'gc>,
@@ -1775,7 +1746,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn do_init_action(
         &mut self,
         self_display_object: DisplayObject<'gc>,
@@ -1855,7 +1825,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn remove_object(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1874,7 +1843,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn set_background_color(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1884,7 +1852,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn sound_stream_block(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1914,7 +1881,6 @@ impl<'gc, 'a> MovieClipData<'gc> {
         Ok(())
     }
 
-    #[inline]
     fn start_sound_1(
         &mut self,
         context: &mut UpdateContext<'_, 'gc, '_>,
@@ -1973,7 +1939,6 @@ impl MovieClipStatic {
 }
 
 unsafe impl<'gc> Collect for MovieClipStatic {
-    #[inline]
     fn needs_trace() -> bool {
         false
     }
@@ -2028,7 +1993,6 @@ impl GotoPlaceObject {
         }
     }
 
-    #[inline]
     fn id(&self) -> CharacterId {
         match &self.place_object.action {
             swf::PlaceObjectAction::Place(id) | swf::PlaceObjectAction::Replace(id) => *id,
@@ -2036,7 +2000,6 @@ impl GotoPlaceObject {
         }
     }
 
-    #[inline]
     fn modifies_original_item(&self) -> bool {
         if let swf::PlaceObjectAction::Replace(_) = &self.place_object.action {
             true
@@ -2045,7 +2008,6 @@ impl GotoPlaceObject {
         }
     }
 
-    #[inline]
     fn depth(&self) -> Depth {
         self.place_object.depth.into()
     }

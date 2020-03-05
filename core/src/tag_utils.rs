@@ -105,7 +105,6 @@ impl From<Arc<SwfMovie>> for SwfSlice {
 }
 
 impl AsRef<[u8]> for SwfSlice {
-    #[inline]
     fn as_ref(&self) -> &[u8] {
         &self.movie.data()[self.start..self.end]
     }
@@ -113,7 +112,6 @@ impl AsRef<[u8]> for SwfSlice {
 
 impl SwfSlice {
     /// Creates an empty SwfSlice.
-    #[inline]
     pub fn empty(swf_version: u8) -> Self {
         Self {
             movie: Arc::new(SwfMovie::empty(swf_version)),

@@ -18,7 +18,6 @@ use std::sync::Arc;
 pub struct RegisterSet<'gc>(SmallVec<[Value<'gc>; 8]>);
 
 unsafe impl<'gc> gc_arena::Collect for RegisterSet<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         for register in &self.0 {
             register.trace(cc);
@@ -111,7 +110,6 @@ pub struct Activation<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for Activation<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.scope.trace(cc);
         self.constant_pool.trace(cc);

@@ -186,7 +186,6 @@ impl<'gc> MovieLibrary<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for MovieLibrary<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         for character in self.characters.values() {
             character.trace(cc);
@@ -208,7 +207,6 @@ pub struct Library<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for Library<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         for (_, val) in self.movie_libraries.iter() {
             val.trace(cc);

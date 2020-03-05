@@ -32,7 +32,6 @@ pub enum ReturnValue<'gc> {
 }
 
 unsafe impl<'gc> Collect for ReturnValue<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         use ReturnValue::*;
 

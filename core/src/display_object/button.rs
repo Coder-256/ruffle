@@ -387,7 +387,6 @@ impl<'gc> ButtonData<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for ButtonData<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         for child in self.children.values() {
             child.trace(cc);
@@ -439,7 +438,6 @@ struct ButtonStatic {
 }
 
 unsafe impl gc_arena::Collect for ButtonStatic {
-    #[inline]
     fn needs_trace() -> bool {
         false
     }

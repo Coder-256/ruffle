@@ -34,7 +34,6 @@ pub struct Scope<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for Scope<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.parent.trace(cc);
         self.values.trace(cc);

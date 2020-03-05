@@ -90,7 +90,6 @@ struct GraphicStatic {
 }
 
 unsafe impl<'gc> gc_arena::Collect for GraphicStatic {
-    #[inline]
     fn needs_trace() -> bool {
         false
     }

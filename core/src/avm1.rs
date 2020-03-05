@@ -94,7 +94,6 @@ pub struct Avm1<'gc> {
 }
 
 unsafe impl<'gc> gc_arena::Collect for Avm1<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.globals.trace(cc);
         self.constant_pool.trace(cc);

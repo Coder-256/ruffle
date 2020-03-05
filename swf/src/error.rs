@@ -29,7 +29,6 @@ pub enum Error {
 
 impl Error {
     /// Helper method to create `Error::Avm1ParseError`.
-    #[inline]
     pub fn avm1_parse_error(opcode: u8) -> Self {
         Error::Avm1ParseError {
             opcode,
@@ -37,7 +36,6 @@ impl Error {
         }
     }
     /// Helper method to create `Error::Avm1ParseError`.
-    #[inline]
     pub fn avm1_parse_error_with_source(opcode: u8, source: impl error::Error + 'static) -> Self {
         Error::Avm1ParseError {
             opcode,
@@ -45,12 +43,10 @@ impl Error {
         }
     }
     /// Helper method to create `Error::InvalidData`.
-    #[inline]
     pub fn invalid_data(message: impl Into<borrow::Cow<'static, str>>) -> Self {
         Error::InvalidData(message.into())
     }
     /// Helper method to create `Error::SwfParseError`.
-    #[inline]
     pub fn swf_parse_error(tag_code: u16) -> Self {
         Error::SwfParseError {
             tag_code,
@@ -58,7 +54,6 @@ impl Error {
         }
     }
     /// Helper method to create `Error::SwfParseError`.
-    #[inline]
     pub fn swf_parse_error_with_source(tag_code: u16, source: impl error::Error + 'static) -> Self {
         Error::SwfParseError {
             tag_code,
@@ -66,7 +61,6 @@ impl Error {
         }
     }
     /// Helper method to create `Error::Unsupported`.
-    #[inline]
     pub fn unsupported(message: impl Into<borrow::Cow<'static, str>>) -> Self {
         Error::Unsupported(message.into())
     }

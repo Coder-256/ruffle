@@ -295,7 +295,6 @@ impl WebCanvasRenderBackend {
     }
 
     #[allow(clippy::float_cmp)]
-    #[inline]
     fn set_transform(&mut self, transform: &Transform) {
         let matrix = transform.matrix;
 
@@ -312,7 +311,6 @@ impl WebCanvasRenderBackend {
     }
 
     #[allow(clippy::float_cmp)]
-    #[inline]
     fn set_color_filter(&self, transform: &Transform) {
         let color_transform = &transform.color_transform;
         if color_transform.r_mult == 1.0
@@ -353,7 +351,6 @@ impl WebCanvasRenderBackend {
         }
     }
 
-    #[inline]
     fn clear_color_filter(&self) {
         self.context.set_filter("none");
         self.context.set_global_alpha(1.0);

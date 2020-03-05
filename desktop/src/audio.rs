@@ -427,7 +427,6 @@ impl AudioBackend for CpalAudioBackend {
 struct VecAsRef(Arc<Vec<u8>>);
 
 impl AsRef<[u8]> for VecAsRef {
-    #[inline]
     fn as_ref(&self) -> &[u8] {
         &self.0
     }

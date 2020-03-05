@@ -26,18 +26,15 @@ impl<'a> Reader<'a> {
         }
     }
 
-    #[inline]
     pub fn pos(&self) -> usize {
         self.inner.position() as usize
     }
 
-    #[inline]
     pub fn seek(&mut self, relative_offset: isize) {
         let new_pos = self.inner.position() as i64 + relative_offset as i64;
         self.inner.set_position(new_pos as u64);
     }
 
-    #[inline]
     fn read_slice(&mut self, len: usize) -> Result<&'a [u8]> {
         let pos = self.pos();
         self.inner.set_position(pos as u64 + len as u64);
@@ -47,7 +44,6 @@ impl<'a> Reader<'a> {
         Ok(slice)
     }
 
-    #[inline]
     fn read_c_string(&mut self) -> Result<&'a str> {
         // Find zero terminator.
         let str_slice = {
@@ -66,7 +62,6 @@ impl<'a> Reader<'a> {
         std::str::from_utf8(str_slice).map_err(|_| Error::invalid_data("Invalid string data"))
     }
 
-    #[inline]
     pub fn read_action(&mut self) -> Result<Option<Action<'a>>> {
         let (opcode, mut length) = self.read_opcode_and_length()?;
 
@@ -104,7 +99,6 @@ impl<'a> Reader<'a> {
     /// that contain sub-blocks of code, such as `DefineFunction`.
     /// The `length` passed in should be the length excluding any sub-blocks.
     /// The final `length` returned will be total length of the action, including sub-blocks.
-    #[inline]
     #[allow(clippy::inconsistent_digit_grouping)]
     fn read_op(&mut self, opcode: u8, length: &mut usize) -> Result<Option<Action<'a>>> {
         use num_traits::FromPrimitive;

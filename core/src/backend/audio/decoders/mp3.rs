@@ -46,7 +46,6 @@ impl<R: Read> Mp3Decoder<R> {
 impl<R: Read> Iterator for Mp3Decoder<R> {
     type Item = [i16; 2];
 
-    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         if self.cur_sample >= self.num_samples {
             self.next_frame();
@@ -71,7 +70,6 @@ impl<R: Read> Iterator for Mp3Decoder<R> {
 
 #[cfg(feature = "minimp3")]
 impl<R: AsRef<[u8]> + Default> SeekableDecoder for Mp3Decoder<Cursor<R>> {
-    #[inline]
     fn reset(&mut self) {
         // TODO: This is funky.
         // I want to reset the `BitStream` and `Cursor` to their initial positions,
@@ -117,12 +115,10 @@ impl<R: Read> Mp3Decoder<R> {
 }
 
 impl<R: Read> Decoder for Mp3Decoder<R> {
-    #[inline]
     fn num_channels(&self) -> u8 {
         self.num_channels as u8
     }
 
-    #[inline]
     fn sample_rate(&self) -> u16 {
         self.sample_rate as u16
     }
@@ -132,7 +128,6 @@ impl<R: Read> Decoder for Mp3Decoder<R> {
 impl<R: Read> Iterator for Mp3Decoder<R> {
     type Item = [i16; 2];
 
-    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         if self.cur_sample >= self.cur_frame.num_samples {
             self.next_frame();
@@ -160,7 +155,6 @@ impl<R: Read> Iterator for Mp3Decoder<R> {
 
 #[cfg(all(feature = "puremp3", not(feature = "minimp3")))]
 impl<R: AsRef<[u8]> + Default> SeekableDecoder for Mp3Decoder<Cursor<R>> {
-    #[inline]
     fn reset(&mut self) {
         // TODO: This is funky.
         // I want to reset the `BitStream` and `Cursor` to their initial positions,

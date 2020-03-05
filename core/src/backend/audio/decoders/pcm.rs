@@ -57,7 +57,6 @@ impl<R: Read> Iterator for PcmDecoder<R> {
 }
 
 impl<R: Read> Decoder for PcmDecoder<R> {
-    #[inline]
     fn num_channels(&self) -> u8 {
         if self.is_stereo {
             2
@@ -66,19 +65,16 @@ impl<R: Read> Decoder for PcmDecoder<R> {
         }
     }
 
-    #[inline]
     fn sample_rate(&self) -> u16 {
         self.sample_rate
     }
 }
 
 impl<R: AsRef<[u8]>> SeekableDecoder for PcmDecoder<Cursor<R>> {
-    #[inline]
     fn reset(&mut self) {
         self.inner.set_position(0);
     }
 
-    #[inline]
     fn seek_to_sample_frame(&mut self, frame: u32) {
         let pos = u64::from(frame) * u64::from(self.num_channels()) * 2;
         self.inner.set_position(pos);

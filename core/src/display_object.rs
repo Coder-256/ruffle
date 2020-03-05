@@ -82,7 +82,6 @@ impl<'gc> Default for DisplayObjectBase<'gc> {
 }
 
 unsafe impl<'gc> Collect for DisplayObjectBase<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.parent.trace(cc);
         self.first_child.trace(cc);

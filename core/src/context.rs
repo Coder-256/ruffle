@@ -110,7 +110,6 @@ pub struct QueuedActions<'gc> {
 }
 
 unsafe impl<'gc> Collect for QueuedActions<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.clip.trace(cc);
         self.action_type.trace(cc);
@@ -161,7 +160,6 @@ impl<'gc> Default for ActionQueue<'gc> {
 }
 
 unsafe impl<'gc> Collect for ActionQueue<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         self.queue.iter().for_each(|o| o.trace(cc));
     }
@@ -241,7 +239,6 @@ impl fmt::Debug for ActionType<'_> {
 }
 
 unsafe impl<'gc> Collect for ActionType<'gc> {
-    #[inline]
     fn trace(&self, cc: gc_arena::CollectionContext) {
         if let ActionType::NotifyListeners { args, .. } = self {
             args.trace(cc);
