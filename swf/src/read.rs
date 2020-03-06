@@ -2531,9 +2531,9 @@ impl<R: Read> Reader<R> {
             let mut envelope = SoundEnvelope::new();
             for _ in 0..num_points {
                 envelope.push(SoundEnvelopePoint {
-                    sample: self.read_u32()?,
-                    left_volume: f32::from(self.read_u16()?) / 32768f32,
-                    right_volume: f32::from(self.read_u16()?) / 32768f32,
+                    pos44: self.read_u32()?,
+                    left_level: f32::from(self.read_u16()?) / 32768f32,
+                    right_level: f32::from(self.read_u16()?) / 32768f32,
                 })
             }
             Some(envelope)

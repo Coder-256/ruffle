@@ -554,16 +554,16 @@ impl EnvelopeSignal {
         // TODO: This maybe can be done more clever using the `sample` crate.
         let mut envelope = envelope.into_iter();
         let first_point = envelope.next().unwrap_or_else(|| swf::SoundEnvelopePoint {
-            sample: 0,
-            left_volume: 1.0,
-            right_volume: 1.0,
+            pos44: 0,
+            left_level: 1.0,
+            right_level: 1.0,
         });
         Self {
             // The initial volume is the first point's volume.
             prev_point: swf::SoundEnvelopePoint {
-                sample: 0,
-                left_volume: first_point.left_volume,
-                right_volume: first_point.right_volume,
+                pos44: 0,
+                left_level: first_point.left_level,
+                right_level: first_point.right_level,
             },
             next_point: first_point,
             cur_sample: 0,
@@ -576,36 +576,36 @@ impl sample::signal::Signal for EnvelopeSignal {
 
     fn next(&mut self) -> Self::Frame {
         // Calculate interpolated volume.
-        let out = if self.prev_point.sample < self.next_point.sample {
-            let a = f64::from(self.cur_sample - self.prev_point.sample);
-            let b = f64::from(self.next_point.sample - self.prev_point.sample);
+        let out = if self.prev_point.pos44 < self.next_point.pos44 {
+            let a = f64::from(self.cur_sample - self.prev_point.pos44);
+            let b = f64::from(self.next_point.pos44 - self.prev_point.pos44);
             let lerp = a / b;
             let interpolator = sample::interpolate::Linear::new(
-                [self.prev_point.left_volume, self.prev_point.right_volume],
-                [self.next_point.left_volume, self.next_point.right_volume],
+                [self.prev_point.left_level, self.prev_point.right_level],
+                [self.next_point.left_level, self.next_point.right_level],
             );
             use sample::interpolate::Interpolator;
             interpolator.interpolate(lerp)
         } else {
-            [self.next_point.left_volume, self.next_point.right_volume]
+            [self.next_point.left_level, self.next_point.right_level]
         };
 
         // Update envelope endpoints.
         self.cur_sample = self.cur_sample.saturating_add(1);
-        while self.cur_sample > self.next_point.sample {
+        while self.cur_sample > self.next_point.pos44 {
             self.prev_point = self.next_point.clone();
             self.next_point =
                 self.envelope
                     .next()
                     .clone()
                     .unwrap_or_else(|| swf::SoundEnvelopePoint {
-                        sample: std::u32::MAX,
-                        left_volume: self.prev_point.left_volume,
-                        right_volume: self.prev_point.right_volume,
+                        pos44: std::u32::MAX,
+                        left_level: self.prev_point.left_level,
+                        right_level: self.prev_point.right_level,
                     });
 
-            if self.prev_point.sample > self.next_point.sample {
-                self.next_point.sample = self.prev_point.sample;
+            if self.prev_point.pos44 > self.next_point.pos44 {
+                self.next_point.pos44 = self.prev_point.pos44;
                 log::error!("Invalid sound envelope; sample indices are out of order");
             }
         }

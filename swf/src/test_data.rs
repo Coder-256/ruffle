@@ -2473,9 +2473,9 @@ pub fn tag_tests() -> Vec<TagTestData> {
                     out_sample: None,
                     num_loops: 1,
                     envelope: Some(vec![SoundEnvelopePoint {
-                        sample: 0,
-                        left_volume: 0.0,
-                        right_volume: 1.0,
+                        pos44: 0,
+                        left_level: 0.0,
+                        right_level: 1.0,
                     }]),
                 }),
             },

@@ -2337,9 +2337,9 @@ impl<W: Write> Writer<W> {
         if let Some(ref envelope) = sound_info.envelope {
             self.write_u8(envelope.len() as u8)?;
             for point in envelope {
-                self.write_u32(point.sample)?;
-                self.write_u16((point.left_volume * 32768f32) as u16)?;
-                self.write_u16((point.right_volume * 32768f32) as u16)?;
+                self.write_u32(point.pos44)?;
+                self.write_u16((point.left_level * 32768f32) as u16)?;
+                self.write_u16((point.right_level * 32768f32) as u16)?;
             }
         }
         Ok(())

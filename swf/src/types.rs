@@ -626,9 +626,9 @@ pub type SoundEnvelope = Vec<SoundEnvelopePoint>;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct SoundEnvelopePoint {
-    pub sample: u32,
-    pub left_volume: f32,
-    pub right_volume: f32,
+    pub pos44: u32,
+    pub left_level: f32,
+    pub right_level: f32,
 }
 
 #[derive(Clone, Debug, PartialEq)]
