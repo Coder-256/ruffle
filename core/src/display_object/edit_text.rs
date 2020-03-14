@@ -64,7 +64,7 @@ impl<'gc> EditText<'gc> {
         let text = if swf_tag.is_html {
             let mut result = String::new();
             let tag_text = swf_tag.initial_text.clone().unwrap_or_default();
-            let mut chars = tag_text.chars().peekable();
+            let mut chars = tag_text.chars();
 
             while let Some(c) = chars.next() {
                 // TODO: SWF text fields can contain a limited subset of HTML (and often do in SWF versions >6).
@@ -72,8 +72,8 @@ impl<'gc> EditText<'gc> {
                 // and we will need to properly parse and handle the HTML at some point.
                 // See SWF19 pp. 173-174 for supported HTML tags.
                 if c == '<' {
-                    // Skip characters until we see a close bracket.
-                    chars.by_ref().skip_while(|&x| x != '>').next();
+                    // Ignore all characters until the first closing bracket.
+                    chars.by_ref().find(|&x| x == '>');
                 } else {
                     result.push(c);
                 }

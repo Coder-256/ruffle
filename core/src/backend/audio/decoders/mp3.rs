@@ -35,7 +35,7 @@ impl<R: AsRef<[u8]> + Default> SeekableDecoder for Mp3Decoder<Cursor<R>> {
         // TODO: This is funky.
         // I want to reset the `BitStream` and `Cursor` to their initial positions,
         // but have to work around the borrowing rules of Rust.
-        let mut cursor = std::mem::replace(self.decoder.reader_mut(), Default::default());
+        let mut cursor = std::mem::take(self.decoder.reader_mut());
         cursor.set_position(0);
         *self = Mp3Decoder::new(cursor);
     }
@@ -110,7 +110,7 @@ impl<R: AsRef<[u8]> + Default> SeekableDecoder for Mp3Decoder<Cursor<R>> {
         // TODO: This is funky.
         // I want to reset the `BitStream` and `Cursor` to their initial positions,
         // but have to work around the borrowing rules of Rust.
-        let mut cursor = std::mem::replace(self.decoder.get_mut(), Default::default());
+        let mut cursor = std::mem::take(self.decoder.get_mut());
         cursor.set_position(0);
         *self = Mp3Decoder::new(self.num_channels, self.sample_rate, cursor);
     }

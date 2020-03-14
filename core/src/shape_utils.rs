@@ -501,8 +501,8 @@ impl<'a> ShapeConverter<'a> {
         self.fill_style1 = None;
         self.line_style = None;
 
-        //let fills = std::mem::replace(&mut self.fills.0, FnvHashMap::default());
-        //let strokes = std::mem::replace(&mut self.strokes.0, FnvHashMap::default());
+        //let fills = std::mem::take(&mut self.fills.0);
+        //let strokes = std::mem::take(&mut self.strokes.0);
 
         // Draw fills, and then strokes.
         for (style_id, path) in self.fills.0.drain() {
