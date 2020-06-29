@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 fnv = "1.0.3"
-js-sys = "0.3.25"
+js-sys = "0.3.41"
 log = "0.4" 
 percent-encoding = "2.1.0"
 png = "0.16.3"
